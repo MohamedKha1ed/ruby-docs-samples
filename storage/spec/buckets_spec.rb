@@ -67,6 +67,29 @@ describe "Google Cloud Storage buckets sample" do
     expect(@storage.bucket @bucket_name).not_to be nil
   end
 
+  example "create bucket with NEARLINE and multi-region(US) location" do
+    delete_bucket!
+
+    expect(@storage.bucket @bucket_name).to be nil
+
+    location      = "US"
+    storage_class = "NEARLINE"
+
+    expect {
+      create_bucket_with_class_location project_id:  @project_id,
+                                        bucket_name: @bucket_name,
+                                        location: location,
+                                        storage_class: storage_class
+    }.to output(
+      "Created bucket #{@bucket_name} in #{location} with #{storage_class} class\n"
+    ).to_stdout
+
+    new_bucket = @storage.bucket @bucket_name
+    expect(new_bucket).not_to be nil
+    expect(new_bucket.location).to eq(location)
+    expect(new_bucket.storage_class).to eq(storage_class)
+  end
+
   example "delete bucket" do
     expect(@storage.bucket @bucket_name).not_to be nil
 

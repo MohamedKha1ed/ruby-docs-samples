@@ -40,6 +40,25 @@ def create_bucket project_id:, bucket_name:
   # [END create_bucket]
 end
 
+def create_bucket_with_class_location project_id:, bucket_name:, location:, storage_class:
+  # [START storage_create_bucket_class_location]
+  # project_id    = "Your Google Cloud project ID"
+  # bucket_name   = "Name of Google Cloud Storage bucket to create"
+  # location      = "Location of your Google Cloud Storage bucket"
+  # storage_class = "Storage class of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.create_bucket bucket_name,
+                                  location: location,
+                                  storage_class: storage_class
+
+  puts "Created bucket #{bucket.name} in #{location} with #{storage_class} class"
+  # [END storage_create_bucket_class_location]
+end
+
+
 def delete_bucket project_id:, bucket_name:
   # [START delete_bucket]
   # project_id  = "Your Google Cloud project ID"
@@ -63,6 +82,11 @@ if __FILE__ == $0
   when "create"
     create_bucket project_id:  ENV["GOOGLE_CLOUD_PROJECT"],
                   bucket_name: ARGV.shift
+  when "create_with_class_and_location"
+    create_bucket_with_class_location project_id:    ENV["GOOGLE_CLOUD_PROJECT"],
+                                      bucket_name:   ARGV.shift,
+                                      location:      ARGV.shift,
+                                      storage_class: ARGV.shift
   when "delete"
     delete_bucket project_id:  ENV["GOOGLE_CLOUD_PROJECT"],
                   bucket_name: ARGV.shift
@@ -73,6 +97,7 @@ Usage: bundle exec ruby buckets.rb [command] [arguments]
 Commands:
   list               List all buckets in the authenticated project
   create <bucket>    Create a new bucket with the provided name
+  create_with_class_and_location <bucket> <location> <storage_class> Create a new bucket with a location and storage class.
   delete <bucket>    Delete bucket with the provided name
 
 Environment variables:
