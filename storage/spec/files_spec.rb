@@ -277,4 +277,24 @@ describe "Google Cloud Storage files sample" do
 
     expect(file_contents).to include "Content of test file.txt"
   end
+
+  it "can set custom metadata for a file" do
+    delete_file "file.txt"
+    expect(@bucket.file "file.txt").to be nil
+
+    upload @local_file_path, "file.txt"
+
+    expect {
+      set_metadata project_id:  @project_id,
+                   bucket_name: @bucket_name,
+                   file_name:   "file.txt",
+                   key:         metadata_key,
+                   value:       metadata_value
+    }
+
+    file = @bucket.file "file.txt"
+    expect(file).not_to be nil
+    expect(file.metadata["metadata_key"]).to eq metadata_value
+  end
+
 end
