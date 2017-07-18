@@ -28,6 +28,22 @@ def list_bucket_contents project_id:, bucket_name:
   # [END list_bucket_contents]
 end
 
+def list_bucket_contents_requester_pays project_id:, bucket_name:
+  # [START list_files_requester_pays]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Your Google Cloud Storage bucket name"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name, user_project: true
+
+  bucket.files.each do |file|
+    puts file.name
+  end
+  # [END list_files_requester_pays]
+end
+
 def list_bucket_contents_with_prefix project_id:, bucket_name:, prefix:
   # [START list_bucket_contents_with_prefix]
   # project_id  = "Your Google Cloud project ID"
@@ -115,6 +131,25 @@ def download_file project_id:, bucket_name:, file_name:, local_path:
   file.download local_path
 
   puts "Downloaded #{file.name}"
+  # [END download_file]
+end
+
+def download_file_requester_pays project_id:, bucket_name:, file_name:, local_path:
+  # [START download_file_requester_pays]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Your Google Cloud Storage bucket name"
+  # file_name   = "Name of file in Google Cloud Storage to download locally"
+  # local_path  = "Path to local file to save"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name, user_project: true
+  file    = bucket.file file_name
+
+  file.download local_path
+
+  puts "Downloaded #{file.name} billing project #{project_id}"
   # [END download_file]
 end
 
