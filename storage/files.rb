@@ -215,6 +215,25 @@ def set_metadata project_id:, bucket_name:, file_name:, metadata_key:, metadata_
   # [END set_metadata]
 end
 
+def change_file_storage_class project_id:, bucket_name:, file_name:, new_storage_class:
+  # [START change_file_storage_class]
+  # project_id        = "Your Google Cloud project ID"
+  # bucket_name       = "Your Google Cloud Storage bucket name"
+  # file_name         = "Name of file in Google Cloud Storage"
+  # new_storage_class = "New storage class to use for file"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+  file    = bucket.file file_name
+
+  file.storage_class = new_storage_class
+
+  puts "#{file_name} has been updated to use #{new_storage_class}"
+  # [END change_file_storage_class]
+end
+
 def make_file_public project_id:, bucket_name:, file_name:
   # [START make_file_public]
   # project_id  = "Your Google Cloud project ID"
@@ -275,6 +294,32 @@ def copy_file project_id:, source_bucket_name:, source_file_name:,
   puts "#{file.name} in #{bucket.name} copied to " +
        "#{copied_file.name} in #{destination_bucket.name}"
   # [END copy_file]
+end
+
+def copy_file project_id:, source_bucket_name:, source_file_name:, source_file_generation:,
+                             dest_bucket_name:,   dest_file_name:
+  # [START copy_file_archived_generation]
+  # project_id             = "Your Google Cloud project ID"
+  # source_bucket_name     = "Source bucket to copy file from"
+  # source_file_name       = "Source file name"
+  # source_file_generation = "Generation of source file name"
+  # dest_bucket_name       = "Destination bucket to copy file to"
+  # dest_file_name         = "Destination file name"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket source_bucket_name
+  file    = bucket.file source_file_name
+
+  destination_bucket = storage.bucket dest_bucket_name
+  destination_file   = file.copy destination_bucket.name,
+                                 file.name,
+                                 generation: source_file_generation
+
+  puts "#{file.name}##{source_file_generation} in #{bucket.name} copied to " +
+       "#{copied_file.name} in #{destination_bucket.name}"
+  # [END copy_file_archived_generation]
 end
 
 def rotate_encryption_key project_id:, bucket_name:, file_name:,

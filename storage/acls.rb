@@ -206,6 +206,22 @@ def remove_file_acl project_id:, bucket_name:, file_name:, email:
   # [END remove_file_acl]
 end
 
+def set_bucket_public project_id:, bucket_name:
+  # [START set_bucket_public]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.acl.public!
+
+  puts "#{bucket_name} is now public."
+  # [END set_bucket_public]
+end
+
 def run_sample arguments
   command    = arguments.shift
   project_id = ENV["GOOGLE_CLOUD_PROJECT"]

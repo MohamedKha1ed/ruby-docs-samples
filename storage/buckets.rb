@@ -58,6 +58,157 @@ def create_bucket_with_class_location project_id:, bucket_name:, location:, stor
   # [END storage_create_bucket_class_location]
 end
 
+def view_location_and_class project_id:, bucket_name:
+  # [START storage_get_bucket_class_and_location]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  puts "Located in #{bucket.location} with storage class #{bucket.storage_class}"
+  # [END storage_get_bucket_class_and_location]
+end
+
+def enables_bucket_web_configuration project_id:, bucket_name:, home_page:, not_found_page:
+  # [START enables_bucket_web_configuration]
+  # project_id     = "Your Google Cloud project ID"
+  # bucket_name    = "Name of your Google Cloud Storage bucket"
+  # home_page      = "Cloud Storage file in your bucket used as a homepage"
+  # not_found_page = "Cloud Storage file in your bucket used as a not found page"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.website_main = home_page
+  bucket.website_404  = not_found_page
+
+  puts "#{bucket_name} uses hompage as #{home_page} and not found page as #{not_found_page}"
+  # [END enables_bucket_web_configuration]
+end
+
+def enable_file_versioning project_id:, bucket_name:
+  # [START enable_versioning]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.versioning = true
+
+  puts "Versioning is enabled for #{bucket_name}"
+  # [END enable_versioning]
+end
+
+def disable_file_versioning project_id:, bucket_name:
+  # [START disable_versioning]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.versioning = false
+
+  puts "Versioning is disabled for #{bucket_name}"
+  # [END disable_versioning]
+end
+
+def disable_file_versioning project_id:, bucket_name:
+  # [START disable_versioning]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.versioning = false
+
+  puts "Versioning is disabled for #{bucket_name}"
+  # [END disable_versioning]
+end
+
+def check_file_versioning project_id:, bucket_name:
+  # [START view_versioning_status]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  if bucket.versioning
+    puts "Versioning is enabled for #{bucket_name}"
+  else
+    puts "Versioning is disabled for #{bucket_name}"
+  # [END disable_versioning]
+end
+
+def bucket_labels project_id:, bucket_name:
+  # [START get_bucket_labels]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.labels.each do |key, value|
+    puts "#{key} = #{value}"
+  end
+  # [END get_bucket_labels]
+end
+
+def bucket_add_bucket_label project_id:, bucket_name:, label_key:, label_value:
+  # [START add_bucket_label]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+  # label_key   = "Cloud Storage bucket Label Key"
+  # label_value = "Cloud Storage bucket Label Value"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.update do |bucket|
+    bucket.labels[label_key] = label_value
+  end
+
+  puts "Added #{label_key} with value #{label_value} to labels for bucket #{bucket_name}"
+  # [END add_bucket_label]
+end
+
+def bucket_remove_bucket_label project_id:, bucket_name:, label_key:
+  # [START remove_bucket_label]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+  # label_key   = "Cloud Storage bucket Label Key"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.update do |bucket|
+    bucket.labels.delete label_key
+  end
+
+  puts "Removed #{label_key} from labels for bucket #{bucket_name}"
+  # [END remove_bucket_label]
 
 def delete_bucket project_id:, bucket_name:
   # [START delete_bucket]

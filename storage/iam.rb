@@ -50,6 +50,26 @@ def add_bucket_iam_member project_id:, bucket_name:, role:, member:
   # [END add_bucket_iam_member]
 end
 
+def add_bucket_iam_member project_id:, bucket_name:, role:, member:
+  # [START add_bucket_iam_member]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Your Google Cloud Storage bucket name"
+  # role        = "Bucket-level IAM role"
+  # member      = "Bucket-level IAM member"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket = storage.bucket bucket_name
+
+  bucket.policy do |policy|
+    policy.add "roles/storage.objectViewer", "allUsers"
+  end
+
+  puts "#{bucket_name} is now public."
+  # [END add_bucket_iam_member]
+end
+
 def remove_bucket_iam_member project_id:, bucket_name:, role:, member:
   # [START remove_bucket_iam_member]
   # project_id  = "Your Google Cloud project ID"
