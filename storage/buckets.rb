@@ -209,6 +209,41 @@ def bucket_remove_bucket_label project_id:, bucket_name:, label_key:
 
   puts "Removed #{label_key} from labels for bucket #{bucket_name}"
   # [END remove_bucket_label]
+end
+
+def bucket_set_requester_pays project_id:, bucket_name:
+  # [START set_requester_pays]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  bucket.requester_pays = true
+
+  puts "Requester pays has been enabled for #{bucket_name}"
+  # [END set_requester_pays]
+end
+
+def bucket_get_requester_pays_status project_id:, bucket_name:
+  # [START get_requester_pays_status]
+  # project_id  = "Your Google Cloud project ID"
+  # bucket_name = "Name of your Google Cloud Storage bucket"
+
+  require "google/cloud/storage"
+
+  storage = Google::Cloud::Storage.new project: project_id
+  bucket  = storage.bucket bucket_name
+
+  if bucket.requester_pays
+    puts "Requester Pays is enabled"
+  else
+    puts "Requester Pays is disabled"
+  end
+  # [END get_requester_pays_status]
+end
 
 def delete_bucket project_id:, bucket_name:
   # [START delete_bucket]
